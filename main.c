@@ -25,6 +25,7 @@
 #include <bcm2835.h>						// C libraries for Raspberry Pi version 1 & 2
 
 #include "SPI.h"
+#include "test.h"
 
 //#define BUS_CLOCK 16000000
 #define LED_TEST RPI_V2_GPIO_P1_12		    // Assigning LED output to pin 12?
@@ -36,8 +37,11 @@ int main(int argc, char **argv)
 	const unsigned int delay_time_ms = 5;  
 	
 	if ( HardwareInit() )
-		return 1;			// fail
-	
+	{
+		printf("SPI Initialisation has gone all wrong");	
+		return 1;		
+	}
+			
 	while (1)
 	{  
 		
@@ -45,12 +49,13 @@ int main(int argc, char **argv)
 		 * 
 		 * LED TEST
 		bcm2835_gpio_set(LED_TEST); 						//Sets the specified pin output to HIGH 
-		//printing();
+		//test_printing();
 		//printf("Rand Value: %f\r", rand() * 3.14);
 		bcm2835_delay (delay_time_ms);						// Delay function
 		bcm2835_gpio_clr(LED_TEST);					     	//Sets the specified pin output to LOW
 		bcm2835_delay (delay_time_ms);	
 		*/
+		test_printing();
 		bcm2835_delay (delay_time_ms);						// Delay function
 		bcm2835_gpio_set(LED_TEST);					     	// Sets the specified pin output to LOW
 		bcm2835_delay (delay_time_ms);	
@@ -62,7 +67,8 @@ int main(int argc, char **argv)
 
 int HardwareInit(void)
 {
-	if ( !bcm2835_init() ){return 1;}						// return value if initialisation of bcm2835 C functions fails
+	if ( !bcm2835_init() )
+		return 1;											// return value if initialisation of bcm2835 C functions fails
 	
 	bcm2835_gpio_fsel(LED_TEST, BCM2835_GPIO_FSEL_OUTP);	// Set the registers as either input or output of the pin for LED Test Function
 	
