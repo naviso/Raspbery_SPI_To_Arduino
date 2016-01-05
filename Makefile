@@ -9,8 +9,8 @@ pi = -l bcm2835
 all: SPI_Comms
 
 # Listing All object that SPI_Coms need
-SPI_Comms: main.o SPI.o test.o
-	$(cc) main.o SPI.o test.o -o SPI_Comms $(pi)
+SPI_Comms: main.o SPI.o test.o ShutDown.o
+	$(cc) main.o SPI.o test.o ShutDown.o -o SPI_Comms $(pi)
 
 # Listing object dependancies	
 main.o: main.c
@@ -21,6 +21,9 @@ SPI.o: SPI.c
 	
 test.o: test.c
 	$(cc) $(cflags) test.c
+
+Shutdown.o: ShutDown.c
+	$(cc) $(cflags) ShutDown.c
 
 # Clean *o removes object files, and inserting exe name removes executable
 clean:

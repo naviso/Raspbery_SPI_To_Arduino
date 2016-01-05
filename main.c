@@ -1,28 +1,13 @@
 /*
- * untitled.c
- * 
- * Copyright 2015  <pi@raspberrypi>
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- * 
- * 
+
+
  */
  
 // Shutdown Sequence using SIGINT: http://www.thegeekstuff.com/2012/03/catch-signals-sample-c-code/
-								
+#include <signal.h>
+#include <stdlib.h>
+#include <unistd.h>								
+//////////////////////////////////////////////
 
 #include <stdio.h>
 #include <bcm2835.h>						// C libraries for Raspberry Pi version 1 & 2
@@ -30,17 +15,27 @@
 #include "SPI.h"
 #include "test.h"
 
+#include "ShutDown.h"
+
 //#define BUS_CLOCK 16000000
 #define LED_TEST RPI_V2_GPIO_P1_12		    // Assigning LED output to pin 12?
 
 uint16_t Test_Value = 123;
 
 
-int HardwareInit(void);
+int Hardware_Init(void);
+
+/* FUNCTION DECLARATIONS */
+// void signal_callback_handler(int);          // Catches signal (e.g. ^c shutdown)
+ShutDown_Init();
 
 int main(int argc, char **argv)
 {
 	const unsigned int delay_time_ms = 1;  
+	
+	/* CALL THE SIGNAL HANDLER FUNCTION ON A Ctrl-C EXIT */
+   // signal(SIGINT, signal_callback_handler);
+	ShutDown_Init_Signal_Function();
 
 	if ( HardwareInit() )
 	{
@@ -92,3 +87,24 @@ int HardwareInit(void)
 	
 	return 0; 												// All good
 }
+
+/*
+void signal_callback_handler(int signum)
+{
+   printf("\nCaught signal %d\n",signum);
+ 
+   bcm2835_gpio_write(LED1, LOW);
+   bcm2835_gpio_write(LED2, LOW);
+   bcm2835_gpio_write(LED3, LOW);
+   bcm2835_gpio_write(LED4, LOW);
+   bcm2835_gpio_write(LED5, LOW);
+   bcm2835_gpio_write(LED6, LOW);
+   bcm2835_gpio_write(LED7, LOW);
+   bcm2835_gpio_write(LED8, LOW);
+   bcm2835_gpio_write(ACRELAY, LOW);
+   bcm2835_gpio_write(RELAY1, LOW);
+
+   bcm2835_close();
+   exit(signum);
+}
+*/
