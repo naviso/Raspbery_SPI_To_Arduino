@@ -9,11 +9,14 @@
 void ShutDown_Init(void)
 {
 	//void SHUTDOWN_Init_Signal_Function(void);
-	void signal_callback_handler(int);
+	void signal_callback_handler(int);			
 }
 
 void ShutDown_Init_Signal_Function(void)
 {
+	//Two inputs: 
+	//	First = Signal Value or input that we want. In this case we want SIGINT -> "Shift + c" 
+	//  Second = A pointer to a signal handler which is a fucntion that calls the shutdown procedures (Signal_Callback_handler) 
 	signal(SIGINT, signal_callback_handler);
 }
 
@@ -37,3 +40,31 @@ void signal_callback_handler(int signum)
    bcm2835_close();
    exit(signum);
 }
+
+/*
+ * EXAMPLE:
+ * 
+ * 
+#include<stdio.h>
+#include<signal.h>
+#include<unistd.h>
+
+void sig_handler(int signo)
+{
+  if (signo == SIGINT)
+    printf("received SIGINT\n");
+}
+
+int main(void)
+{
+  if (signal(SIGINT, sig_handler) == SIG_ERR)
+  printf("\ncan't catch SIGINT\n");
+  // A long long wait so that we can easily issue a signal to this process
+  while(1) 
+    sleep(1);
+  return 0;
+}
+* 
+* 
+*/
+
