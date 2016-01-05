@@ -20,6 +20,9 @@
  * 
  * 
  */
+ 
+// Shutdown Sequence using SIGINT: http://www.thegeekstuff.com/2012/03/catch-signals-sample-c-code/
+								
 
 #include <stdio.h>
 #include <bcm2835.h>						// C libraries for Raspberry Pi version 1 & 2
@@ -30,12 +33,15 @@
 //#define BUS_CLOCK 16000000
 #define LED_TEST RPI_V2_GPIO_P1_12		    // Assigning LED output to pin 12?
 
+uint16_t Test_Value = 123;
+
+
 int HardwareInit(void);
 
 int main(int argc, char **argv)
 {
-	const unsigned int delay_time_ms = 5;  
-	
+	const unsigned int delay_time_ms = 1;  
+
 	if ( HardwareInit() )
 	{
 		printf("SPI Initialisation has gone all wrong");	
@@ -55,10 +61,20 @@ int main(int argc, char **argv)
 		bcm2835_gpio_clr(LED_TEST);					     	//Sets the specified pin output to LOW
 		bcm2835_delay (delay_time_ms);	
 		*/
-		test_printing();
+		test_printing();									// Prints random number
 		bcm2835_delay (delay_time_ms);						// Delay function
 		bcm2835_gpio_set(LED_TEST);					     	// Sets the specified pin output to LOW
 		bcm2835_delay (delay_time_ms);	
+		bcm2835_gpio_clr(LED_TEST);		
+		
+		uint8_t send_data = 0x23;
+        uint8_t read_data = bcm2835_spi_transfer(send_data);	// just get arduino to send 0x23 via SPI
+    
+       // printf("Sent to SPI: 0x%02X. Read back from SPI: 0x%02X.\n", send_data, read_data);
+        if (send_data != read_data)
+			printf("Do you have the loopback from MOSI to MISO connected?\r");
+		else 
+			printf("WERKS: Data trans Success");
 		
 	}
 	

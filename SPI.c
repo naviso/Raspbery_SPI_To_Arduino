@@ -20,9 +20,9 @@ void SPI_Init(void)
 	
 	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_64);   // SPI Clock Speed I'M ASSUMING ARDUINO IS 4MHZ CLOCK SPEED (250 / 64 = ~4 MHz)
 	
-	bcm2835_spi_chipSelect(BCM2835_SPI_CS_NONE);                 // NEED MORE INFORMATION
+	bcm2835_spi_chipSelect(BCM2835_SPI_CS_NONE);                 // NEED MORE INFORMATION -> Only using 1 device........
 	 
-	bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS_NONE, LOW); // NEED MORE INFORMATION
+	bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS_NONE, LOW); // NEED MORE INFORMATION -> Default setup
 	
 	/*
 	
