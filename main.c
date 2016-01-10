@@ -27,11 +27,13 @@ int Hardware_Init(void);
 
 /* FUNCTION DECLARATIONS */
 // void signal_callback_handler(int);          // Catches signal (e.g. ^c shutdown)
-ShutDown_Init();
+void ShutDown_Init();     
 
 int main(int argc, char **argv)
 {
-	const unsigned int delay_time_ms = 1;  
+	const unsigned int delay_time_ms = 10;  
+	uint8_t	counter   = 0;
+	uint8_t send_data = 0x23;
 	
 	/* CALL THE SIGNAL HANDLER FUNCTION ON A Ctrl-C EXIT */
    // signal(SIGINT, signal_callback_handler);
@@ -56,20 +58,27 @@ int main(int argc, char **argv)
 		bcm2835_gpio_clr(LED_TEST);					     	//Sets the specified pin output to LOW
 		bcm2835_delay (delay_time_ms);	
 		*/
-		test_printing();									// Prints random number
+//		test_printing();									// Prints random number
 		bcm2835_delay (delay_time_ms);						// Delay function
 		bcm2835_gpio_set(LED_TEST);					     	// Sets the specified pin output to LOW
 		bcm2835_delay (delay_time_ms);	
 		bcm2835_gpio_clr(LED_TEST);		
 		
-		uint8_t send_data = 0x23;
+		//uint8_t send_data = 0x23;
         uint8_t read_data = bcm2835_spi_transfer(send_data);	// just get arduino to send 0x23 via SPI
     
        // printf("Sent to SPI: 0x%02X. Read back from SPI: 0x%02X.\n", send_data, read_data);
+
         if (send_data != read_data)
 			printf("Do you have the loopback from MOSI to MISO connected?\r");
 		else 
-			printf("WERKS: Data trans Success");
+			printf("WERKS: Data trans Success, data: sent = 0x%02X - Recived = 0x%02X  \n", send_data, read_data);
+		
+		counter++;
+		if (counter % 2 == 0)
+			send_data++;
+		
+		bcm2835_delay (delay_time_ms);	
 		
 	}
 	
