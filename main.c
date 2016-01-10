@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 		if (counter % 2 == 0)
 			send_data++;
 		
-		bcm2835_delay (delay_time_ms);	
+		//bcm2835_delay (delay_time_ms);	
 		
 	}
 	
